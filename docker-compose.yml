@@ -1,0 +1,11 @@
+services:
+
+  apms:
+    image: postgres
+    container_name: apms-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=oralcumshot
+      - POSTGRES_DB=postgres
+    ports:
+      - 5432:5432
