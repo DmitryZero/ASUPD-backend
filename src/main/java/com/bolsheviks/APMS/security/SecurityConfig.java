@@ -10,12 +10,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    private final SecurityFilter securityFilter;
-//
-//    public SecurityConfig(SecurityFilter securityFilter) {
-//        this.securityFilter = securityFilter;
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().disable()
@@ -24,8 +18,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .addFilterBefore(securityFilter, BasicAuthenticationFilter.class)
         ;
     }
 }
