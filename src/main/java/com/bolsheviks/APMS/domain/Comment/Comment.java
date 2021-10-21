@@ -19,8 +19,7 @@ import java.util.UUID;
 public class Comment extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "user_owner_id_id")
-    private User userOwnerId;
+    private User userOwner;
     @CreatedDate
     private Date dateCreated;
     private String content;

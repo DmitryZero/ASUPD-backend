@@ -20,8 +20,7 @@ public class Card extends BaseEntity {
     @LastModifiedDate
     private Date lastModifiedDate;
     @ManyToOne
-    @JoinColumn(name = "last_modified_user_id_id")
-    private User lastModifiedUserId;
+    private User lastModifiedUser;
     @Enumerated(EnumType.STRING)
     private CardStatus status;
     @Enumerated(EnumType.STRING)
