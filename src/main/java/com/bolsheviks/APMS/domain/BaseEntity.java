@@ -1,4 +1,4 @@
-package com.bolsheviks.APMS;
+package com.bolsheviks.APMS.domain;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
