@@ -2,6 +2,7 @@ package com.bolsheviks.APMS.domain.Card;
 
 import com.bolsheviks.APMS.domain.BaseEntity;
 import com.bolsheviks.APMS.domain.Comment.Comment;
+import com.bolsheviks.APMS.domain.User.User;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -18,7 +19,9 @@ public class Card extends BaseEntity {
     private String name;
     @LastModifiedDate
     private Date lastModifiedDate;
-    private UUID lastModifiedUserId;
+    @ManyToOne
+    @JoinColumn(name = "last_modified_user_id_id")
+    private User lastModifiedUserId;
     @Enumerated(EnumType.STRING)
     private CardStatus status;
     @Enumerated(EnumType.STRING)
