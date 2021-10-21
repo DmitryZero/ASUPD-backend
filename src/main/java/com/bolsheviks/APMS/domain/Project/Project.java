@@ -19,13 +19,11 @@ public class Project extends BaseEntity {
 
     private String name;
     @ManyToOne
-    @JoinColumn(name = "user_captain_id_id")
-    private User userCaptainId;
+    private User userCaptain;
     @ManyToMany
     private List<User> usersMembersList;
     @ManyToOne
-    @JoinColumn(name = "user_project_manager_id_id")
-    private User userProjectManagerId;
+    private User userProjectManager;
     @ManyToMany
     private List<User> usersConsultantsList;
     private ProjectStatus projectStatus;
