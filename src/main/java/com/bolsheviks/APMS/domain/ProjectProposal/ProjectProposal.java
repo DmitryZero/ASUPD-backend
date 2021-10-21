@@ -1,14 +1,16 @@
 package com.bolsheviks.APMS.domain.ProjectProposal;
 
-import com.bolsheviks.APMS.BaseEntity;
+import com.bolsheviks.APMS.domain.BaseEntity;
 import com.bolsheviks.APMS.domain.Stage.Stage;
 import com.bolsheviks.APMS.domain.User.User;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 @Entity
+@Table(name = "project_proposals")
 public class ProjectProposal extends BaseEntity {
 
     private String name;

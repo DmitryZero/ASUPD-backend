@@ -1,14 +1,16 @@
 package com.bolsheviks.APMS.domain.User;
 
-import com.bolsheviks.APMS.BaseEntity;
+import com.bolsheviks.APMS.domain.BaseEntity;
 import com.bolsheviks.APMS.domain.Project.Project;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(name = "users")
 public class User extends BaseEntity {
 
     private String firstName;
