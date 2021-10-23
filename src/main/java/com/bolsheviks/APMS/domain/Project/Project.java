@@ -3,18 +3,16 @@ package com.bolsheviks.APMS.domain.Project;
 import com.bolsheviks.APMS.domain.BaseEntity;
 import com.bolsheviks.APMS.domain.Stage.Stage;
 import com.bolsheviks.APMS.domain.User.User;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.util.UUID;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "projects")
+@Getter
+@Setter
 public class Project extends BaseEntity {
 
     private String name;
