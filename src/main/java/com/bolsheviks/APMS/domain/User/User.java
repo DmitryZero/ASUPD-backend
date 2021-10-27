@@ -2,8 +2,7 @@ package com.bolsheviks.APMS.domain.User;
 
 import com.bolsheviks.APMS.domain.BaseEntity;
 import com.bolsheviks.APMS.domain.Project.Project;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -15,6 +14,9 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
+@NonNull
 public class User extends BaseEntity {
 
     private String firstName;
@@ -24,9 +26,12 @@ public class User extends BaseEntity {
     private String phoneNumber;
     private String status;
     private String workPlace;
-    private String email;
+    @NonNull
+    private String login;
+    @NonNull
     private String password;
-    private UserRole role;
+    @NonNull
+    private Role role;
     @ManyToMany
     private List<Project> projectList;
 }
