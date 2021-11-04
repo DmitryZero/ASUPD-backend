@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserConverter {
 
-    public UserDto convertUserToUserDto(User user) {
+    public UserDto convertUserToDto(User user) {
         UserDto userDto = new UserDto();
         userDto.firstName = user.getFirstName();
         userDto.lastName = user.getLastName();
@@ -19,7 +19,7 @@ public class UserConverter {
         return userDto;
     }
 
-    public void fillUserByUserDto(User user, UserDto userDto) {
+    public void fillUserByDto(User user, UserDto userDto) {
         if (userDto.firstName != null) {
             user.setFirstName(userDto.firstName);
         }
