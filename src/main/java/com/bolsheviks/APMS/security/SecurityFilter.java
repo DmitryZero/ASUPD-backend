@@ -1,6 +1,7 @@
 package com.bolsheviks.APMS.security;
 
 import com.bolsheviks.APMS.domain.User.UserRepository;
+import jdk.jshell.spi.ExecutionControl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
+    public static final String USER_UUID = "UserUuid";
     private final UserRepository userRepository;
     private final SecurityFilterProperties securityFilterProperties;
 
@@ -34,10 +36,23 @@ public class SecurityFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
-        if (header == null || userRepository.countUserById(UUID.fromString(header)) == 0) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Пошёл нахуй, паскуда!");
+        try {
+            UUID userId = UUID.fromString(header);
+            if (userRepository.countUserById(userId) == 0) {
+                send401Error(response);
+                return;
+            } else {
+                request.setAttribute(USER_UUID, userId);
+            }
+        } catch (Throwable t) {
+            send401Error(response);
+            return;
         }
         filterChain.doFilter(request, response);
+    }
+
+    private void send401Error(HttpServletResponse response) throws IOException {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Пошёл нахуй, паскуда!");
     }
 
     private boolean checkFreeAccessRegexes(HttpServletRequest request) {

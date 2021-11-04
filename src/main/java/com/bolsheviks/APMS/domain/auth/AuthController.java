@@ -28,9 +28,13 @@ public class AuthController {
     @PostMapping("/sing_up")
     public String registration(@RequestHeader("login") String login,
                                @RequestHeader("password") String password) {
-//        Я отъебал Антона
+//        Я отъебал Антона TODO: навестить маму Егора
         User newUser = new User(login, password, Role.USER);
-        userRepository.save(newUser);
+        try {
+            userRepository.save(newUser);
+        } catch (Throwable t) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
         return newUser.getId().toString();
     }
 }
