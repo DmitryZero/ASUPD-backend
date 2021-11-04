@@ -15,7 +15,7 @@ public class AuthController {
 
     private final UserRepository userRepository;
 
-    @GetMapping("/sing_in")
+    @GetMapping("/sign_in")
     public String authentication(@RequestHeader("login") String login,
                                  @RequestHeader("password") String password) {
         User user = userRepository.findFirstByLoginAndPassword(login, password)
@@ -23,7 +23,7 @@ public class AuthController {
         return user.getId().toString();
     }
 
-    @PostMapping("/sing_up")
+    @PostMapping("/sign_up")
     public String registration(@RequestHeader("login") String login,
                                @RequestHeader("password") String password) {
 //        Я отъебал Антона TODO: навестить маму Егора
