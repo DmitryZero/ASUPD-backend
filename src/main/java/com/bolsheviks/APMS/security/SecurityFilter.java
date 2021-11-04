@@ -40,11 +40,13 @@ public class SecurityFilter extends OncePerRequestFilter {
             UUID userId = UUID.fromString(header);
             if (userRepository.countUserById(userId) == 0) {
                 send401Error(response);
+                return;
             } else {
                 request.setAttribute(USER_UUID, userId);
             }
         } catch (Throwable t) {
             send401Error(response);
+            return;
         }
         filterChain.doFilter(request, response);
     }

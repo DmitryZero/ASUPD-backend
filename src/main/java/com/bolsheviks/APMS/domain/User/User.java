@@ -4,6 +4,7 @@ import com.bolsheviks.APMS.domain.BaseEntity;
 import com.bolsheviks.APMS.domain.Project.Project;
 import lombok.*;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -27,6 +28,7 @@ public class User extends BaseEntity {
     private String status;
     private String workPlace;
     @NonNull
+    @Column(unique = true)
     private String login;
     @NonNull
     private String password;
