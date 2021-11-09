@@ -24,6 +24,13 @@ public class UserController {
         return userConverter.convertUserToDto(user);
     }
 
+    @GetMapping("/{uuid}")
+    public UserDto getUser(@PathVariable("uuid") UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return userConverter.convertUserToDto(user);
+    }
+
     @PutMapping("/self")
     public void put(@RequestAttribute(USER_UUID) UUID userId, @RequestBody UserDto userDto) {
         User user = userRepository.findById(userId).orElseThrow(() ->
