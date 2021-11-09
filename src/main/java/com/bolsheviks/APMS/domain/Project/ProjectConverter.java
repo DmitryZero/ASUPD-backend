@@ -19,6 +19,8 @@ public class ProjectConverter {
 
     public ProjectDto convertProjectToDto(Project project) {
         ProjectDto projectDto = new ProjectDto();
+        projectDto.userCaptain = project.getUserCaptain().getId();
+        projectDto.projectManager = project.getUserProjectManager().getId();
         projectDto.usersMembersUuidList = project.getUsersMembersList().stream().map(BaseEntity::getId).toList();
         projectDto.usersConsultantsUuidList = project.getUsersConsultantsList().stream().map(BaseEntity::getId).toList();
         projectDto.projectStatus = project.getProjectStatus();
