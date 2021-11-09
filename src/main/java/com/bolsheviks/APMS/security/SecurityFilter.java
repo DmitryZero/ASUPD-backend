@@ -1,7 +1,6 @@
 package com.bolsheviks.APMS.security;
 
 import com.bolsheviks.APMS.domain.User.UserRepository;
-import jdk.jshell.spi.ExecutionControl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -40,11 +39,13 @@ public class SecurityFilter extends OncePerRequestFilter {
             UUID userId = UUID.fromString(header);
             if (userRepository.countUserById(userId) == 0) {
                 send401Error(response);
+                return;
             } else {
                 request.setAttribute(USER_UUID, userId);
             }
         } catch (Throwable t) {
             send401Error(response);
+            return;
         }
         filterChain.doFilter(request, response);
     }

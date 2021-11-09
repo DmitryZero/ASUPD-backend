@@ -1,14 +1,10 @@
 package com.bolsheviks.APMS.domain.auth;
 
-import com.bolsheviks.APMS.domain.User.User;
-import com.bolsheviks.APMS.domain.User.Role;
-import com.bolsheviks.APMS.domain.User.UserRepository;
+import com.bolsheviks.APMS.domain.User.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -16,8 +12,9 @@ import java.util.UUID;
 public class AuthController {
 
     private final UserRepository userRepository;
+    private final UserConverter userConverter;
 
-    @GetMapping("/sing_in")
+    @GetMapping("/sign_in")
     public String authentication(@RequestHeader("login") String login,
                                  @RequestHeader("password") String password) {
         User user = userRepository.findFirstByLoginAndPassword(login, password)
@@ -25,12 +22,18 @@ public class AuthController {
         return user.getId().toString();
     }
 
-    @PostMapping("/sing_up")
+    @PostMapping("/sign_up")
     public String registration(@RequestHeader("login") String login,
-                               @RequestHeader("password") String password) {
-//        Я отъебал Антона
+                               @RequestHeader("password") String password,
+                               @RequestBody UserDto userDto) {
+//        Я отъебал Антона TODO: навестить маму Егора
         User newUser = new User(login, password, Role.USER);
-        userRepository.save(newUser);
+        userConverter.fillUserByUserDto(newUser, userDto);
+        try {
+            userRepository.save(newUser);
+        } catch (Throwable t) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
         return newUser.getId().toString();
     }
 }

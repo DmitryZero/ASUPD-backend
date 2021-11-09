@@ -24,8 +24,8 @@ public class UserController {
         return userConverter.convertUserToDto(user);
     }
 
-    @PostMapping("/self")
-    public void post(@RequestAttribute(USER_UUID) UUID userId, @RequestBody UserDto userDto) {
+    @PutMapping("/self")
+    public void put(@RequestAttribute(USER_UUID) UUID userId, @RequestBody UserDto userDto) {
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND));
         userConverter.fillUserByDto(user, userDto);
