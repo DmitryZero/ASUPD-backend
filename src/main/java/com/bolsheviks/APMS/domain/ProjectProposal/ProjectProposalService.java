@@ -20,8 +20,9 @@ public class ProjectProposalService {
     public void createProject(User user, User manager, ProjectProposal projectProposal) {
         Project project = new Project(projectProposal, user, manager);
         projectRepository.save(project);
-        List<Project> userProjects = user.getProjectList();
-        userProjects.add(project);
+        user.getProjectList().add(project);
         userRepository.save(user);
+        manager.getProjectList().add(project);
+        userRepository.save(manager);
     }
 }

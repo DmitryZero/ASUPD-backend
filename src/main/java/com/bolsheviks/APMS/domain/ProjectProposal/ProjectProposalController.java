@@ -29,15 +29,15 @@ public class ProjectProposalController {
                 .map(projectProposalConverter::convertProjectProposalToDto).toList();
     }
 
-    @PostMapping("/{uuid}/create")
+    @PostMapping("/{uuid}")
     public void createProject(@RequestAttribute(USER_UUID) UUID userId,
-                              @PathVariable("uuid") UUID uuid,
-                              @RequestParam("managerUuid") UUID managerUuid) {
+                              @PathVariable("uuid") UUID id,
+                              @RequestHeader("managerId") UUID managerId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        User manager = userRepository.findById(managerUuid)
+        User manager = userRepository.findById(managerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        ProjectProposal projectProposal = projectProposalRepository.findById(uuid)
+        ProjectProposal projectProposal = projectProposalRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (!projectProposal.getProjectManagersList().contains(manager)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
