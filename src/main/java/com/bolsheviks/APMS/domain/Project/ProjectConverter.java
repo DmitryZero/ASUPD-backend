@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Component
@@ -17,7 +16,6 @@ public class ProjectConverter {
 
     private final StageConverter stageConverter;
     private final UserRepository userRepository;
-    private final ProjectRepository projectRepository;
 
     public ProjectDto convertProjectToDto(Project project) {
         ProjectDto projectDto = new ProjectDto();
@@ -29,7 +27,7 @@ public class ProjectConverter {
         return projectDto;
     }
 
-    public void fillProjectByDtoAndSave(Project project, ProjectDto projectDto) {
+    public void fillProjectByDto(Project project, ProjectDto projectDto) {
         if (projectDto.usersMembersUuidList != null) {
             project.setUsersMembersList(getUserListFromUuidList(projectDto.usersMembersUuidList));
         }
@@ -42,14 +40,9 @@ public class ProjectConverter {
         if (projectDto.information != null) {
             project.setInformation(projectDto.information);
         }
-        if (projectDto.stageDtoList != null) {
-            project.setStageList(stageConverter.createStageListFromDtoList(projectDto.stageDtoList));
-        }
-        projectRepository.save(project);
     }
 
     private List<User> getUserListFromUuidList(List<UUID> uuids) {
-        return uuids.stream().map(uuid ->
-                userRepository.findById(uuid).orElse(null)).filter(Objects::nonNull).toList();
+        return userRepository.findAllById(uuids);
     }
 }

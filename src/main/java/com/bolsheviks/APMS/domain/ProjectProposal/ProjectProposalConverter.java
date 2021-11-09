@@ -8,6 +8,7 @@ public class ProjectProposalConverter {
 
     public ProjectProposalDto convertProjectProposalToDto(ProjectProposal projectProposal) {
         ProjectProposalDto projectProposalDto = new ProjectProposalDto();
+        projectProposalDto.id = projectProposal.getId();
         projectProposalDto.name = projectProposal.getName();
         projectProposalDto.information = projectProposal.getInformation();
         projectProposalDto.projectManagersUuidList = projectProposal.getProjectManagersList()

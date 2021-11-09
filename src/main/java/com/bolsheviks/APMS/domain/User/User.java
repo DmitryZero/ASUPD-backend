@@ -16,7 +16,7 @@ import java.util.Objects;
 @Table(name = "users")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @RequiredArgsConstructor
 @NonNull
 public class User extends BaseEntity {

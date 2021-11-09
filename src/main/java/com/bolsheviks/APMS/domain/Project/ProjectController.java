@@ -27,7 +27,7 @@ public class ProjectController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (project.getUsersMembersList().contains(user)) {
+        if (project.containsUser(user)) {
             return projectConverter.convertProjectToDto(project);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -35,16 +35,16 @@ public class ProjectController {
 
     @PutMapping("/{uuid}")
     public void put(@RequestAttribute(USER_UUID) UUID userId,
-                          @PathVariable("uuid") UUID projectId,
-                          @RequestBody ProjectDto projectDto) {
+                    @PathVariable("uuid") UUID projectId,
+                    @RequestBody ProjectDto projectDto) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (project.getUsersMembersList().contains(user)) {
-            projectConverter.fillProjectByDtoAndSave(project, projectDto);
-            return;
+        if (!project.containsUserWithModifyRights(user)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        projectConverter.fillProjectByDto(project, projectDto);
+        projectRepository.save(project);
     }
 }

@@ -28,7 +28,7 @@ public class AuthController {
                                @RequestBody UserDto userDto) {
 //        Я отъебал Антона TODO: навестить маму Егора
         User newUser = new User(login, password, Role.USER);
-        userConverter.fillUserByUserDto(newUser, userDto);
+        userConverter.fillUserByDto(newUser, userDto);
         try {
             userRepository.save(newUser);
         } catch (Throwable t) {
