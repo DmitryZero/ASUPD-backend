@@ -46,7 +46,7 @@ public class ProjectProposalService {
     }
 
     private List<Stage> copyStageList(List<Stage> stages) {
-        List<Stage> newStageList = new ArrayList<>(stages)
+        List<Stage> newStageList = stages
                 .stream().map(this::copyStage).toList();
         stageRepository.saveAll(newStageList);
         return newStageList;
