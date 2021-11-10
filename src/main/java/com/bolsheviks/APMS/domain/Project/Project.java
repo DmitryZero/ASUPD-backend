@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -37,11 +38,10 @@ public class Project extends BaseEntity {
         this.name = projectProposal.getName();
         this.userCaptain = userCreator;
         this.userProjectManager = userProjectManager;
-        // TODO: 09.11.2021 Решить сука!
-//        this.usersConsultantsList = projectProposal.getConsultantList();
+        this.usersConsultantsList = List.copyOf(projectProposal.getConsultantList());
         this.projectStatus = ProjectStatus.IN_PROCESS;
         this.information = projectProposal.getInformation();
-//        this.stageList = projectProposal.getStageList();
+        this.stageList = List.copyOf(projectProposal.getStageList());
     }
 
     public boolean containsUserWithModifyRights(User user) {
