@@ -10,13 +10,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "projects")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Project extends BaseEntity {
 
     private String name;
@@ -32,17 +33,6 @@ public class Project extends BaseEntity {
     private String information;
     @OneToMany
     private List<Stage> stageList;
-
-    public Project(ProjectProposal projectProposal, User userCreator, User userProjectManager) {
-        this.name = projectProposal.getName();
-        this.userCaptain = userCreator;
-        this.userProjectManager = userProjectManager;
-        // TODO: 09.11.2021 Решить сука!
-//        this.usersConsultantsList = projectProposal.getConsultantList();
-        this.projectStatus = ProjectStatus.IN_PROCESS;
-        this.information = projectProposal.getInformation();
-//        this.stageList = projectProposal.getStageList();
-    }
 
     public boolean containsUserWithModifyRights(User user) {
         return userCaptain.equals(user)

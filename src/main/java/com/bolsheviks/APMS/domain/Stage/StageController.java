@@ -6,6 +6,7 @@ import com.bolsheviks.APMS.domain.User.User;
 import com.bolsheviks.APMS.domain.User.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,16 +36,21 @@ public class StageController {
         return stageConverter.convertStageToDto(stage);
     }
 
+    @Transactional
     @PostMapping
     public void post(@RequestAttribute(USER_UUID) UUID userId,
                      @RequestParam("projectUuid") UUID projectUuid,
                      @RequestBody StageDto stageDto) {
-        if (!canUserModifyStage(userId, projectUuid)) {
+        Project project = projectRepository.findById(projectUuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (!canUserModifyStage(userId, project)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Stage stage = new Stage();
         stageConverter.fillStageFromDto(stage, stageDto);
         stageRepository.save(stage);
+        project.getStageList().add(stage);
+        projectRepository.save(project);
     }
 
     @PutMapping("/{uuid}")
@@ -74,6 +80,12 @@ public class StageController {
     private boolean canUserModifyStage(UUID userId, UUID projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return project.containsUserWithModifyRights(user);
+    }
+
+    private boolean canUserModifyStage(UUID userId, Project project) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return project.containsUserWithModifyRights(user);
