@@ -39,12 +39,15 @@ public class StageController {
     public void post(@RequestAttribute(USER_UUID) UUID userId,
                      @RequestParam("projectUuid") UUID projectUuid,
                      @RequestBody StageDto stageDto) {
-        if (!canUserModifyStage(userId, projectUuid)) {
+        Project project = getProject(projectUuid);
+        if (!canUserModifyStage(userId, project)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Stage stage = new Stage();
         stageConverter.fillStageFromDto(stage, stageDto);
         stageRepository.save(stage);
+        project.getStageList().add(stage);
+        projectRepository.save(project);
     }
 
     @PutMapping("/{uuid}")
@@ -52,7 +55,8 @@ public class StageController {
                     @RequestParam("projectUuid") UUID projectUuid,
                     @PathVariable("uuid") UUID uuid,
                     @RequestBody StageDto stageDto) {
-        if (!canUserModifyStage(userId, projectUuid)) {
+        Project project = getProject(projectUuid);
+        if (!canUserModifyStage(userId, project)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Stage stage = stageRepository.findById(uuid)
@@ -65,23 +69,29 @@ public class StageController {
     public void delete(@RequestAttribute(USER_UUID) UUID userId,
                        @RequestParam("projectUuid") UUID projectUuid,
                        @PathVariable("uuid") UUID uuid) {
-        if (!canUserModifyStage(userId, projectUuid)) {
+        Project project = getProject(projectUuid);
+        if (!canUserModifyStage(userId, project)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+        Stage stage = stageRepository.findById(uuid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        project.getStageList().remove(stage);
+        projectRepository.save(project);
         stageRepository.deleteById(uuid);
     }
 
-    private boolean canUserModifyStage(UUID userId, UUID projectId) {
-        Project project = projectRepository.findById(projectId)
+    private Project getProject(UUID projectId) {
+        return projectRepository.findById(projectId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    private boolean canUserModifyStage(UUID userId, Project project) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return project.containsUserWithModifyRights(user);
     }
 
     private boolean canUserGetStage(UUID userId, UUID projectId) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Project project = getProject(projectId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return project.containsUser(user);
