@@ -25,4 +25,9 @@ public class Comment extends BaseEntity {
     @CreatedDate
     private Date dateCreated;
     private String content;
+
+    public Comment(User userOwner, String content) {
+        this.userOwner = userOwner;
+        this.content = content;
+    }
 }
