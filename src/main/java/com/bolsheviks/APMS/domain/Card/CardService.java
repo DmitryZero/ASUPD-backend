@@ -19,6 +19,7 @@ public class CardService {
     public Card createCard(User userCreator, CardDto cardDto, Stage stage) {
         Card card = new Card();
         cardConverter.fillCardByDto(card, cardDto, userCreator);
+        card.setStatus(CardStatus.IN_PROCESS);
         cardRepository.save(card);
         stage.getCardList().add(card);
         stageRepository.save(stage);

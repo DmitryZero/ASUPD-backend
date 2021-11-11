@@ -14,7 +14,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProjectConverter {
 
-    private final StageConverter stageConverter;
     private final UserRepository userRepository;
 
     public ProjectDto convertProjectToDto(Project project) {

@@ -21,10 +21,18 @@ public class CardConverter {
     }
 
     public void fillCardByDto(Card card, CardDto cardDto, User modifyUser) {
-        card.setName(cardDto.name);
+        if (cardDto.name != null) {
+            card.setName(cardDto.name);
+        }
         card.setLastModifiedUser(modifyUser);
-        card.setContent(cardDto.content);
-        card.setStatus(cardDto.status);
-        card.setMark(cardDto.mark);
+        if (cardDto.content != null) {
+            card.setContent(cardDto.content);
+        }
+        if (cardDto.status != null) {
+            card.setStatus(cardDto.status);
+        }
+        if (cardDto.mark != null) {
+            card.setMark(cardDto.mark);
+        }
     }
 }

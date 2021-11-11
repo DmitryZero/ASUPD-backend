@@ -1,6 +1,7 @@
 package com.bolsheviks.APMS.domain.ProjectProposal;
 
 import com.bolsheviks.APMS.domain.BaseEntity;
+import com.bolsheviks.APMS.domain.User.Role;
 import com.bolsheviks.APMS.domain.User.User;
 import com.bolsheviks.APMS.domain.User.UserRepository;
 import lombok.AccessLevel;
@@ -35,6 +36,20 @@ public class ProjectProposalController {
         ProjectProposal projectProposal = projectProposalRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return projectProposalConverter.convertProjectProposalToDto(projectProposal);
+    }
+
+    @PostMapping
+    public UUID createProjectProposal(@RequestAttribute(USER_UUID) UUID userId,
+                               @RequestBody ProjectProposalDto projectProposalDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (user.getRole() != Role.BUSINESS_ADMINISTRATOR) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        ProjectProposal projectProposal = new ProjectProposal();
+        projectProposalConverter.fillProjectProposalByDto(projectProposal, projectProposalDto);
+        return projectProposalRepository.save(projectProposal).getId();
     }
 
     @PostMapping("/{uuid}")

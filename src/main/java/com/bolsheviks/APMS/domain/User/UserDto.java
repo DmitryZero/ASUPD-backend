@@ -13,4 +13,5 @@ public class UserDto {
     public String status;
     public String workPlace;
     public List<UUID> projectUuidList;
+    public Role role;
 }

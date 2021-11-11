@@ -38,4 +38,14 @@ public class UserController {
         userConverter.fillUserByDto(user, userDto);
         userRepository.save(user);
     }
+
+    @PutMapping("/{uuid}")
+    public void changeRole(@RequestAttribute(USER_UUID) UUID adminId,
+                           @PathVariable("uuid") UUID userId,
+                           @RequestBody UserDto userDto) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND));
+        user.setRole(userDto.role);
+        userRepository.save(user);
+    }
 }
