@@ -6,6 +6,7 @@ import com.bolsheviks.APMS.domain.User.User;
 import com.bolsheviks.APMS.domain.User.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,6 +36,7 @@ public class StageController {
         return stageConverter.convertStageToDto(stage);
     }
 
+    @Transactional
     @PostMapping
     public void post(@RequestAttribute(USER_UUID) UUID userId,
                      @RequestParam("projectUuid") UUID projectUuid,

@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "projects")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Project extends BaseEntity {
 
     private String name;
@@ -33,16 +33,6 @@ public class Project extends BaseEntity {
     private String information;
     @OneToMany
     private List<Stage> stageList;
-
-    public Project(ProjectProposal projectProposal, User userCreator, User userProjectManager) {
-        this.name = projectProposal.getName();
-        this.userCaptain = userCreator;
-        this.userProjectManager = userProjectManager;
-        this.usersConsultantsList = List.copyOf(projectProposal.getConsultantList());
-        this.projectStatus = ProjectStatus.IN_PROCESS;
-        this.information = projectProposal.getInformation();
-        this.stageList = List.copyOf(projectProposal.getStageList());
-    }
 
     public boolean containsUserWithModifyRights(User user) {
         return userCaptain.equals(user)
