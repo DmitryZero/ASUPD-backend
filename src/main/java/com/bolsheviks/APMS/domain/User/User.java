@@ -10,12 +10,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @RequiredArgsConstructor
 @NonNull
 public class User extends BaseEntity {
@@ -36,4 +37,11 @@ public class User extends BaseEntity {
     private Role role;
     @ManyToMany
     private List<Project> projectList;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(getId(), user.getId());
+    }
 }

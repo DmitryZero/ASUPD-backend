@@ -51,7 +51,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     }
 
     private void send401Error(HttpServletResponse response) throws IOException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Пошёл нахуй, паскуда!");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
     private boolean checkFreeAccessRegexes(HttpServletRequest request) {
