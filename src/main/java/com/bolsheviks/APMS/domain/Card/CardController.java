@@ -27,6 +27,36 @@ public class CardController {
     private final StageRepository stageRepository;
     private final CardService cardService;
 
+    @PutMapping("/{uuid}")
+    public void put(@RequestAttribute(USER_UUID) UUID userId,
+                    @PathVariable("uuid") UUID cardId,
+                    @RequestBody CardDto cardDto) {
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        cardConverter.fillCardByDto(card, cardDto, user);
+        cardRepository.save(card);
+    }
+
+    @PutMapping("/{uuid}/mark")
+    public void putMark(@RequestAttribute(USER_UUID) UUID userId,
+                    @PathVariable("uuid") UUID cardId,
+                    @RequestBody CardDto cardDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Project project = projectRepository.selectByCard(card)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (project.getUserProjectManager().equals(user)) {
+            cardConverter.fillCardByDto(card, cardDto, user);
+            cardRepository.save(card);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/{uuid}")
     public CardDto get(@RequestAttribute(USER_UUID) UUID userId,
                        @PathVariable("uuid") UUID id) {
@@ -51,7 +81,7 @@ public class CardController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Project project = projectRepository.findById(projectUuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (!project.containsUser(user)) {
+        if (!project.containsUserWithModifyRights(user)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Stage stage = findStageByUuidInProject(project, stageUuid);

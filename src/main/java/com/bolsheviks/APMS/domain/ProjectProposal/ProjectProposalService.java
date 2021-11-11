@@ -28,6 +28,7 @@ public class ProjectProposalService {
         Project project = createProjectFromProjectProposal(projectProposal, user, manager);
         addProjectToUser(user, project);
         addProjectToUser(manager, project);
+        projectProposal.getConsultantList().forEach(consultant -> addProjectToUser(consultant, project));
         return project;
     }
 
