@@ -25,7 +25,7 @@ public class ProjectConverter {
         projectDto.usersConsultantsUuidList = project.getUsersConsultantsList().stream().map(BaseEntity::getId).toList();
         projectDto.projectStatus = project.getProjectStatus();
         projectDto.information = project.getInformation();
-        projectDto.stageDtoList = project.getStageList().stream().map(stageConverter::convertStageToDto).toList();
+        projectDto.stageUuidList = project.getStageList().stream().map(BaseEntity::getId).toList();
         return projectDto;
     }
 

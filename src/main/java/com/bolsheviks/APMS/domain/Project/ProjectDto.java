@@ -1,7 +1,5 @@
 package com.bolsheviks.APMS.domain.Project;
 
-import com.bolsheviks.APMS.domain.Stage.StageDto;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -13,5 +11,5 @@ public class ProjectDto {
     public List<UUID> usersConsultantsUuidList;
     public ProjectStatus projectStatus;
     public String information;
-    public List<StageDto> stageDtoList;
+    public List<UUID> stageUuidList;
 }
