@@ -16,11 +16,12 @@ public class CardService {
     private final StageRepository stageRepository;
 
     @Transactional
-    public void createCard(User userCreator, CardDto cardDto, Stage stage) {
+    public Card createCard(User userCreator, CardDto cardDto, Stage stage) {
         Card card = new Card();
         cardConverter.fillCardByDto(card, cardDto, userCreator);
         cardRepository.save(card);
         stage.getCardList().add(card);
         stageRepository.save(stage);
+        return card;
     }
 }

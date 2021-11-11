@@ -43,7 +43,7 @@ public class CardController {
     }
 
     @PostMapping
-    public void post(@RequestAttribute(USER_UUID) UUID userId,
+    public UUID post(@RequestAttribute(USER_UUID) UUID userId,
                      @RequestParam("projectUuid") UUID projectUuid,
                      @RequestParam("stageUuid") UUID stageUuid,
                      @RequestBody CardDto cardDto) {
@@ -55,7 +55,7 @@ public class CardController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Stage stage = findStageByUuidInProject(project, stageUuid);
-        cardService.createCard(user, cardDto, stage);
+        return cardService.createCard(user, cardDto, stage).getId();
     }
 
     private Stage findStageByUuidInProject(Project project, UUID stageUuid) {

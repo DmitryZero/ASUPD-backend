@@ -38,7 +38,7 @@ public class StageController {
 
     @Transactional
     @PostMapping
-    public void post(@RequestAttribute(USER_UUID) UUID userId,
+    public UUID post(@RequestAttribute(USER_UUID) UUID userId,
                      @RequestParam("projectUuid") UUID projectUuid,
                      @RequestBody StageDto stageDto) {
         Project project = getProject(projectUuid);
@@ -50,6 +50,7 @@ public class StageController {
         stageRepository.save(stage);
         project.getStageList().add(stage);
         projectRepository.save(project);
+        return stage.getId();
     }
 
     @PutMapping("/{uuid}")

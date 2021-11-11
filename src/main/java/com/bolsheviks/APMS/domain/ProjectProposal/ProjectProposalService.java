@@ -24,10 +24,11 @@ public class ProjectProposalService {
     private final StageRepository stageRepository;
 
     @Transactional
-    public void createProject(User user, User manager, ProjectProposal projectProposal) {
+    public Project createProject(User user, User manager, ProjectProposal projectProposal) {
         Project project = createProjectFromProjectProposal(projectProposal, user, manager);
         addProjectToUser(user, project);
         addProjectToUser(manager, project);
+        return project;
     }
 
     private Project createProjectFromProjectProposal(ProjectProposal projectProposal,
