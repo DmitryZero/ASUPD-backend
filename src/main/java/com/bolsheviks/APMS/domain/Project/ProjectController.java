@@ -1,5 +1,6 @@
 package com.bolsheviks.APMS.domain.Project;
 
+import com.bolsheviks.APMS.domain.Stage.Stage;
 import com.bolsheviks.APMS.domain.User.Role;
 import com.bolsheviks.APMS.domain.User.User;
 import com.bolsheviks.APMS.domain.User.UserRepository;
@@ -93,6 +94,54 @@ public class ProjectController {
             }
             usersMembersList.add(newMember);
         }
+        projectRepository.save(project);
+    }
+
+    @DeleteMapping("/{uuid}/delete_consultants")
+    public void deleteConsultants(@RequestAttribute(USER_UUID) UUID userId,
+                                  @PathVariable("uuid") UUID projectId,
+                                  @RequestBody ProjectDto projectDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (!project.getUserProjectManager().equals(user)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        List<User> usersConsultantsList = project.getUsersConsultantsList();
+
+        for (User consultantToDelete : userRepository.findAllById(projectDto.usersConsultantsUuidList)) {
+            if (!usersConsultantsList.contains(consultantToDelete)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+            usersConsultantsList.remove(consultantToDelete);
+        }
+
+        projectRepository.save(project);
+    }
+
+    @DeleteMapping("/{uuid}/delete_members")
+    public void deleteMembers(@RequestAttribute(USER_UUID) UUID userId,
+                                  @PathVariable("uuid") UUID projectId,
+                                  @RequestBody ProjectDto projectDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (!project.getUserCaptain().equals(user)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        List<User> usersMembersList = project.getUsersMembersList();
+
+        for (User membersToDelete : userRepository.findAllById(projectDto.usersMembersUuidList)) {
+            if (!usersMembersList.contains(membersToDelete)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+            usersMembersList.remove(membersToDelete);
+        }
+
         projectRepository.save(project);
     }
 }
