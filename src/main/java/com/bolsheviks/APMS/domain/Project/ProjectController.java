@@ -1,6 +1,5 @@
 package com.bolsheviks.APMS.domain.Project;
 
-import com.bolsheviks.APMS.domain.Stage.Stage;
 import com.bolsheviks.APMS.domain.User.Role;
 import com.bolsheviks.APMS.domain.User.User;
 import com.bolsheviks.APMS.domain.User.UserRepository;
