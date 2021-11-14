@@ -1,5 +1,7 @@
 package com.bolsheviks.APMS.domain.ProjectProposal;
 
+import com.bolsheviks.APMS.domain.BaseEntity;
+import com.bolsheviks.APMS.domain.User.Role;
 import com.bolsheviks.APMS.domain.User.User;
 import com.bolsheviks.APMS.domain.User.UserRepository;
 import lombok.AccessLevel;
@@ -24,13 +26,34 @@ public class ProjectProposalController {
     private final ProjectProposalService projectProposalService;
 
     @GetMapping("/get_all")
-    public List<ProjectProposalDto> getAll() {
+    public List<UUID> getAll() {
         return projectProposalRepository.findAll().stream()
-                .map(projectProposalConverter::convertProjectProposalToDto).toList();
+                .map(BaseEntity::getId).toList();
+    }
+
+    @GetMapping("/{uuid}")
+    public ProjectProposalDto get(@PathVariable("uuid") UUID id) {
+        ProjectProposal projectProposal = projectProposalRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return projectProposalConverter.convertProjectProposalToDto(projectProposal);
+    }
+
+    @PostMapping
+    public UUID createProjectProposal(@RequestAttribute(USER_UUID) UUID userId,
+                               @RequestBody ProjectProposalDto projectProposalDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (user.getRole() != Role.BUSINESS_ADMINISTRATOR) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        ProjectProposal projectProposal = new ProjectProposal();
+        projectProposalConverter.fillProjectProposalByDto(projectProposal, projectProposalDto);
+        return projectProposalRepository.save(projectProposal).getId();
     }
 
     @PostMapping("/{uuid}")
-    public void createProject(@RequestAttribute(USER_UUID) UUID userId,
+    public UUID createProject(@RequestAttribute(USER_UUID) UUID userId,
                               @PathVariable("uuid") UUID id,
                               @RequestHeader("managerId") UUID managerId) {
         User user = userRepository.findById(userId)
@@ -42,6 +65,6 @@ public class ProjectProposalController {
         if (!projectProposal.getProjectManagersList().contains(manager)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        projectProposalService.createProject(user, manager, projectProposal);
+        return projectProposalService.createProject(user, manager, projectProposal).getId();
     }
 }

@@ -16,6 +16,7 @@ public class UserConverter {
         userDto.status = user.getStatus();
         userDto.workPlace = user.getWorkPlace();
         userDto.projectUuidList = user.getProjectList().stream().map(BaseEntity::getId).toList();
+        userDto.role = user.getRole();
         return userDto;
     }
 

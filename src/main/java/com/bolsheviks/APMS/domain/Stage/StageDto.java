@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public class StageDto {
 
+    public UUID id;
     public String name;
     public List<UUID> cardUuidList;
 }
