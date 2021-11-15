@@ -2,7 +2,9 @@ package com.bolsheviks.APMS.domain.Comment;
 
 import com.bolsheviks.APMS.domain.BaseEntity;
 import com.bolsheviks.APMS.domain.User.User;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,6 +20,7 @@ import java.util.Date;
 @Table(name = "comments")
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 
     @ManyToOne

@@ -29,11 +29,11 @@ import static com.bolsheviks.APMS.security.SecurityFilter.USER_UUID;
 @RequiredArgsConstructor
 public class CommentController {
 
-    private ProjectRepository projectRepository;
-    private UserRepository userRepository;
-    private CardRepository cardRepository;
-    private CommentRepository commentRepository;
-    private CommentConverter commentConverter;
+    private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
+    private final CardRepository cardRepository;
+    private final CommentRepository commentRepository;
+    private final CommentConverter commentConverter;
 
     @PostMapping
     public void createComment(@RequestAttribute(USER_UUID) UUID userId,
