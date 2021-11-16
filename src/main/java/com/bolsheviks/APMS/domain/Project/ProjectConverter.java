@@ -18,6 +18,7 @@ public class ProjectConverter {
 
     public ProjectDto convertProjectToDto(Project project) {
         ProjectDto projectDto = new ProjectDto();
+        projectDto.name = project.getName();
         projectDto.userCaptain = project.getUserCaptain().getId();
         projectDto.projectManager = project.getUserProjectManager().getId();
         projectDto.usersMembersUuidList = project.getUsersMembersList().stream().map(BaseEntity::getId).toList();
@@ -29,6 +30,9 @@ public class ProjectConverter {
     }
 
     public void fillProjectByDto(Project project, ProjectDto projectDto) {
+        if (projectDto.name != null) {
+            project.setName(projectDto.name);
+        }
         if (projectDto.usersMembersUuidList != null) {
             project.setUsersMembersList(getUserListFromUuidList(projectDto.usersMembersUuidList));
         }
