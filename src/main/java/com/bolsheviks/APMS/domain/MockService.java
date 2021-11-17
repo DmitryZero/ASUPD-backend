@@ -4,6 +4,7 @@ import com.bolsheviks.APMS.domain.ProjectProposal.ProjectProposal;
 import com.bolsheviks.APMS.domain.ProjectProposal.ProjectProposalRepository;
 import com.bolsheviks.APMS.domain.Stage.Stage;
 import com.bolsheviks.APMS.domain.Stage.StageRepository;
+import com.bolsheviks.APMS.domain.User.Role;
 import com.bolsheviks.APMS.domain.User.User;
 import com.bolsheviks.APMS.domain.User.UserRepository;
 import org.springframework.stereotype.Service;
@@ -35,29 +36,51 @@ public class MockService {
     }
 
     private void createProjectProposalMocks() {
-        ProjectProposal projectProposal = new ProjectProposal();
-        projectProposal.setName("Тестовое проектное предложение");
-        projectProposal.setInformation("Твоя бабушка курит трубку");
+        ProjectProposal firstProjectProposal = new ProjectProposal();
+        firstProjectProposal.setName("АСУ проектной деятельностью");
+        firstProjectProposal.setInformation("Разработка АСУПД для ИжГТУ");
         List<User> users = new ArrayList<>();
-        users.add(createUser());
-        projectProposal.setProjectManagersList(users);
-        projectProposal.setStageList(Stream.of(createStage()).toList());
-        projectProposalRepository.save(projectProposal);
+        users.add(createUser("Шишлина", "Наталья", "Васильевна", Role.CURATOR));
+        firstProjectProposal.setProjectManagersList(users);
+        ArrayList<User> consultants = new ArrayList<>();
+        consultants.add(createUser("Пигалев", "Сергей", "Александрович", Role.CURATOR));
+        consultants.add(createUser("Сенилов", "Михал", "Андреич", Role.CURATOR));
+        firstProjectProposal.setConsultantList(consultants);
+        firstProjectProposal.setStageList(Stream.of(createStage("Разработка и анализ требований")).toList());
+        projectProposalRepository.save(firstProjectProposal);
+
+        ProjectProposal secondProjectProposal = new ProjectProposal();
+        secondProjectProposal.setName("Виртуальные лаборатории");
+        secondProjectProposal.setInformation("Разработка виртуальных лабораторий на движке Unity");
+        List<User> secondUsers = new ArrayList<>();
+        secondUsers.add(createUser("Архипов", "Игорь", "Олегович", Role.CURATOR));
+        secondProjectProposal.setProjectManagersList(secondUsers);
+        ArrayList<User> secondConsultants = new ArrayList<>();
+        secondConsultants.add(createUser("Линус", "Торвальдс", "Иванович", Role.CURATOR));
+        secondConsultants.add(createUser("Хайсэ", "Сасаки", "Андреич", Role.CURATOR));
+        secondProjectProposal.setConsultantList(secondConsultants);
+        secondProjectProposal.setStageList(Stream.of(
+                createStage("Разработка и анализ требований"),
+                createStage("Презентация прототипа"),
+                createStage("Заработка деняк")
+        ).toList());
+        projectProposalRepository.save(secondProjectProposal);
     }
 
-    private User createUser() {
+    private User createUser(String firstName, String lastName, String patronymic, Role role) {
         User user = new User();
-        user.setFirstName("Антон");
-        user.setLastName("Фекалис");
-        user.setPatronymic("Павлович");
+        user.setRole(role);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setPatronymic(patronymic);
 
         userRepository.save(user);
         return user;
     }
 
-    private Stage createStage() {
+    private Stage createStage(String name) {
         Stage stage = new Stage();
-        stage.setName("Тестовый стейдж");
+        stage.setName(name);
         stageRepository.save(stage);
         return stage;
     }
