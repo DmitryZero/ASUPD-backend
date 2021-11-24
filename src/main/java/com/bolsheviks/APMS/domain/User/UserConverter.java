@@ -1,7 +1,10 @@
 package com.bolsheviks.APMS.domain.User;
 
 import com.bolsheviks.APMS.domain.BaseEntity;
+import com.bolsheviks.APMS.domain.Project.Project;
 import org.springframework.stereotype.Component;
+
+import java.util.Comparator;
 
 @Component
 public class UserConverter {
@@ -15,7 +18,7 @@ public class UserConverter {
         userDto.phoneNumber = user.getPhoneNumber();
         userDto.status = user.getStatus();
         userDto.workPlace = user.getWorkPlace();
-        userDto.projectUuidList = user.getProjectList().stream().map(BaseEntity::getId).toList();
+        userDto.projectUuidList = user.getProjectList().stream().sorted(Comparator.comparing(Project::getName)).map(BaseEntity::getId).toList();
         userDto.role = user.getRole();
         return userDto;
     }

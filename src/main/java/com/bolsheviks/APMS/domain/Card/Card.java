@@ -5,6 +5,7 @@ import com.bolsheviks.APMS.domain.Comment.Comment;
 import com.bolsheviks.APMS.domain.User.User;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -19,6 +20,8 @@ import java.util.List;
 @Setter
 public class Card extends BaseEntity {
 
+    @CreatedDate
+    private Date dateCreated;
     private String name;
     @LastModifiedDate
     private Date lastModifiedDate;
