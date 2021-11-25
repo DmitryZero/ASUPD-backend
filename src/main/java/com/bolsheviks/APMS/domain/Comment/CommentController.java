@@ -36,7 +36,7 @@ public class CommentController {
     private final CommentConverter commentConverter;
 
     @PostMapping
-    public void createComment(@RequestAttribute(USER_UUID) UUID userId,
+    public UUID createComment(@RequestAttribute(USER_UUID) UUID userId,
                               @RequestParam("projectUuid") UUID projectId,
                               @RequestParam("cardUuid") UUID cardId,
                               @RequestBody CommentDto commentDto) {
@@ -52,6 +52,8 @@ public class CommentController {
 
         card.getCommentList().add(comment);
         cardRepository.save(card);
+
+        return comment.getId();
     }
 
     @DeleteMapping("/{uuid}")

@@ -11,6 +11,8 @@ public class CommentConverter {
         CommentDto commentDto = new CommentDto();
         commentDto.userOwnerUuid = comment.getUserOwner().getId();
         commentDto.content = comment.getContent();
+        commentDto.commentId = comment.getId();
+        commentDto.dateCreated = comment.getDateCreated();
         return commentDto;
     }
 }
