@@ -1,16 +1,11 @@
 package com.bolsheviks.APMS.domain.ProjectProposal;
 
 import com.bolsheviks.APMS.domain.BaseEntity;
-import com.bolsheviks.APMS.domain.Stage.Stage;
-import com.bolsheviks.APMS.domain.Stage.StageConverter;
-import com.bolsheviks.APMS.domain.Stage.StageDto;
-import com.bolsheviks.APMS.domain.Stage.StageRepository;
 import com.bolsheviks.APMS.domain.User.User;
 import com.bolsheviks.APMS.domain.User.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,8 +14,7 @@ import java.util.UUID;
 public class ProjectProposalConverter {
 
     private final UserRepository userRepository;
-    private final StageConverter stageConverter;
-    private final StageRepository stageRepository;
+    private final StageNamesConverter stageNamesConverter;
 
     public void fillProjectProposalByDto(ProjectProposal projectProposal, ProjectProposalDto projectProposalDto) {
         if (projectProposalDto.name != null) {
@@ -29,8 +23,8 @@ public class ProjectProposalConverter {
         if (projectProposalDto.information != null) {
             projectProposal.setInformation(projectProposalDto.information);
         }
-        if (projectProposalDto.stageDtoList != null) {
-            projectProposal.setStageList(getStageListFromDtoList(projectProposalDto.stageDtoList));
+        if (projectProposalDto.stageNamesList != null) {
+            projectProposal.setStageNames((stageNamesConverter.convertListToStageNames(projectProposalDto.stageNamesList)));
         }
         if (projectProposalDto.projectManagersUuidList != null) {
             projectProposal.setProjectManagersList(getUserListFromUuidList(projectProposalDto.projectManagersUuidList));
@@ -49,8 +43,8 @@ public class ProjectProposalConverter {
                 .stream().map(BaseEntity::getId).toList();
         projectProposalDto.consultantUuidList = projectProposal.getConsultantList()
                 .stream().map(BaseEntity::getId).toList();
-        projectProposalDto.stageDtoList
-                = projectProposal.getStageList().stream().map(stageConverter::convertStageToDto).toList();
+        projectProposalDto.stageNamesList
+                = stageNamesConverter.convertStageNamesToList(projectProposal.getStageNames());
         return projectProposalDto;
     }
 
@@ -58,16 +52,4 @@ public class ProjectProposalConverter {
         return userRepository.findAllById(uuids);
     }
 
-    private List<Stage> getStageListFromDtoList(List<StageDto> stageDtoList) {
-        ArrayList<Stage> stages = new ArrayList<>();
-
-        for (StageDto stageDto : stageDtoList) {
-            Stage stage = new Stage();
-            stageConverter.fillStageFromDto(stage, stageDto);
-            stages.add(stage);
-        }
-        stageRepository.saveAll(stages);
-
-        return stages;
-    }
 }

@@ -19,4 +19,10 @@ public class Stage extends BaseEntity {
     private String name;
     @OneToMany
     private List<Card> cardList;
+
+    public Stage(String name) {
+        this.name = name;
+    }
+
+    public Stage() {}
 }

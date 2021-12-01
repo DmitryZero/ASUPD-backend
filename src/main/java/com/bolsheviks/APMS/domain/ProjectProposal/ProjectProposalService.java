@@ -22,6 +22,7 @@ public class ProjectProposalService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final StageRepository stageRepository;
+    private final StageNamesConverter stageNamesConverter;
 
     @Transactional
     public Project createProject(User user, User manager, ProjectProposal projectProposal) {
@@ -42,22 +43,19 @@ public class ProjectProposalService {
         project.setUsersConsultantsList(new ArrayList<>(projectProposal.getConsultantList()));
         project.setProjectStatus(ProjectStatus.IN_PROCESS);
         project.setInformation(projectProposal.getInformation());
-        project.setStageList(copyStageList(projectProposal.getStageList()));
+        project.setStageList(createStages(projectProposal));
         projectRepository.save(project);
         return project;
     }
 
-    private List<Stage> copyStageList(List<Stage> stages) {
-        List<Stage> newStageList = stages
-                .stream().map(this::copyStage).toList();
-        stageRepository.saveAll(newStageList);
-        return newStageList;
-    }
+    private List<Stage> createStages(ProjectProposal projectProposal) {
+        ArrayList<Stage> stages = new ArrayList<>();
+        stageNamesConverter
+                .convertStageNamesToList(projectProposal.getStageNames())
+                .forEach(name -> stages.add(new Stage(name)));
+        stageRepository.saveAll(stages);
 
-    private Stage copyStage(Stage stage) {
-        Stage newStage = new Stage();
-        newStage.setName(stage.getName());
-        return newStage;
+        return stages;
     }
 
     private void addProjectToUser(User user, Project project) {

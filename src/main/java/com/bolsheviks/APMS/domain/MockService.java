@@ -2,8 +2,6 @@ package com.bolsheviks.APMS.domain;
 
 import com.bolsheviks.APMS.domain.ProjectProposal.ProjectProposal;
 import com.bolsheviks.APMS.domain.ProjectProposal.ProjectProposalRepository;
-import com.bolsheviks.APMS.domain.Stage.Stage;
-import com.bolsheviks.APMS.domain.Stage.StageRepository;
 import com.bolsheviks.APMS.domain.User.Role;
 import com.bolsheviks.APMS.domain.User.User;
 import com.bolsheviks.APMS.domain.User.UserRepository;
@@ -11,20 +9,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class MockService {
 
     private final ProjectProposalRepository projectProposalRepository;
-    private final StageRepository stageRepository;
     private final UserRepository userRepository;
 
     public MockService(ProjectProposalRepository projectProposalRepository,
-                       StageRepository stageRepository,
                        UserRepository userRepository) {
         this.projectProposalRepository = projectProposalRepository;
-        this.stageRepository = stageRepository;
         this.userRepository = userRepository;
 
         createMocks();
@@ -32,6 +26,7 @@ public class MockService {
 
     private void createMocks() {
         createProjectProposalMocks();
+        createAdmin();
     }
 
     private void createAdmin() {
@@ -53,7 +48,7 @@ public class MockService {
         consultants.add(createUser("Пигалев", "Сергей", "Александрович", Role.CURATOR));
         consultants.add(createUser("Сенилов", "Михал", "Андреич", Role.CURATOR));
         firstProjectProposal.setConsultantList(consultants);
-        firstProjectProposal.setStageList(Stream.of(createStage("Разработка и анализ требований")).toList());
+        firstProjectProposal.setStageNames("Разработка и анализ требований");
         projectProposalRepository.save(firstProjectProposal);
 
         ProjectProposal secondProjectProposal = new ProjectProposal();
@@ -66,11 +61,7 @@ public class MockService {
         secondConsultants.add(createUser("Линус", "Торвальдс", "Иванович", Role.CURATOR));
         secondConsultants.add(createUser("Хайсэ", "Сасаки", "Андреич", Role.CURATOR));
         secondProjectProposal.setConsultantList(secondConsultants);
-        secondProjectProposal.setStageList(Stream.of(
-                createStage("Разработка и анализ требований"),
-                createStage("Презентация прототипа"),
-                createStage("Заработка деняк")
-        ).toList());
+        secondProjectProposal.setStageNames("Разработка и анализ требований/Презентация прототипа/Заработка деняк");
         projectProposalRepository.save(secondProjectProposal);
     }
 
@@ -83,12 +74,5 @@ public class MockService {
 
         userRepository.save(user);
         return user;
-    }
-
-    private Stage createStage(String name) {
-        Stage stage = new Stage();
-        stage.setName(name);
-        stageRepository.save(stage);
-        return stage;
     }
 }

@@ -52,6 +52,33 @@ public class ProjectProposalController {
         return projectProposalRepository.save(projectProposal).getId();
     }
 
+    @PutMapping("/{uuid}")
+    public void changeProjectProposal(@RequestAttribute(USER_UUID) UUID userId,
+                                      @PathVariable("uuid") UUID proposalId,
+                                      @RequestBody ProjectProposalDto projectProposalDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (user.getRole() != Role.BUSINESS_ADMINISTRATOR) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        ProjectProposal projectProposal = projectProposalRepository.findById(proposalId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        projectProposalConverter.fillProjectProposalByDto(projectProposal, projectProposalDto);
+        projectProposalRepository.save(projectProposal);
+    }
+
+    @DeleteMapping("/{uuid}")
+    public void deleteProjectProposal(@RequestAttribute(USER_UUID) UUID userId,
+                                      @PathVariable("uuid") UUID proposalId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (user.getRole() != Role.BUSINESS_ADMINISTRATOR) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        projectProposalRepository.deleteById(proposalId);
+    }
+
     @PostMapping("/{uuid}")
     public UUID createProject(@RequestAttribute(USER_UUID) UUID userId,
                               @PathVariable("uuid") UUID id,
