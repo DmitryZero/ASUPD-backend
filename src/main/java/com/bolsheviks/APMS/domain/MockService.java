@@ -32,7 +32,14 @@ public class MockService {
 
     private void createMocks() {
         createProjectProposalMocks();
+    }
 
+    private void createAdmin() {
+        User admin = new User();
+        admin.setLogin("admin");
+        admin.setPassword("oralcumshot");
+        admin.setRole(Role.BUSINESS_ADMINISTRATOR);
+        userRepository.save(admin);
     }
 
     private void createProjectProposalMocks() {
