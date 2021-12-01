@@ -69,6 +69,8 @@ public class ProjectController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
             usersConsultantsList.add(newConsultant);
+            newConsultant.getProjectList().add(project);
+            userRepository.save(newConsultant);
         }
         projectRepository.save(project);
     }
@@ -92,7 +94,61 @@ public class ProjectController {
                 throw new ResponseStatusException(HttpStatus.CONFLICT);
             }
             usersMembersList.add(newMember);
+            newMember.getProjectList().add(project);
+            userRepository.save(newMember);
         }
+        projectRepository.save(project);
+    }
+
+    @DeleteMapping("/{uuid}/delete_consultants")
+    public void deleteConsultants(@RequestAttribute(USER_UUID) UUID userId,
+                                  @PathVariable("uuid") UUID projectId,
+                                  @RequestBody ProjectDto projectDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (!project.getUserProjectManager().equals(user)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        List<User> usersConsultantsList = project.getUsersConsultantsList();
+
+        for (User consultantToDelete : userRepository.findAllById(projectDto.usersConsultantsUuidList)) {
+            if (!usersConsultantsList.contains(consultantToDelete)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+            usersConsultantsList.remove(consultantToDelete);
+            consultantToDelete.getProjectList().remove(project);
+            userRepository.save(consultantToDelete);
+        }
+
+        projectRepository.save(project);
+    }
+
+    @DeleteMapping("/{uuid}/delete_members")
+    public void deleteMembers(@RequestAttribute(USER_UUID) UUID userId,
+                                  @PathVariable("uuid") UUID projectId,
+                                  @RequestBody ProjectDto projectDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (!project.getUserCaptain().equals(user)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        List<User> usersMembersList = project.getUsersMembersList();
+
+        for (User membersToDelete : userRepository.findAllById(projectDto.usersMembersUuidList)) {
+            if (!usersMembersList.contains(membersToDelete)) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+            usersMembersList.remove(membersToDelete);
+            membersToDelete.getProjectList().remove(project);
+            userRepository.save(membersToDelete);
+        }
+
         projectRepository.save(project);
     }
 }
