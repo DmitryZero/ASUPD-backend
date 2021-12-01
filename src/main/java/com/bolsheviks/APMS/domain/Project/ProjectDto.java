@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public class ProjectDto {
 
+    public String name;
     public UUID userCaptain;
     public UUID projectManager;
     public List<UUID> usersMembersUuidList;

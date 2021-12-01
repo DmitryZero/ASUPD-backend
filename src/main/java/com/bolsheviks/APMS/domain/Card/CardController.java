@@ -88,6 +88,28 @@ public class CardController {
         return cardService.createCard(user, cardDto, stage).getId();
     }
 
+    @DeleteMapping("/{uuid}")
+    public void delete(@RequestAttribute(USER_UUID) UUID userId,
+                       @PathVariable("uuid") UUID cardId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Project project = projectRepository.selectByCard(card)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Stage stage = stageRepository.selectByCard(card)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (!project.containsUserWithModifyRights(user)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        stage.getCardList().remove(card);
+        stageRepository.save(stage);
+
+        cardRepository.deleteById(cardId);
+    }
+
     private Stage findStageByUuidInProject(Project project, UUID stageUuid) {
         Stage stage = null;
         for (Stage s : project.getStageList()) {

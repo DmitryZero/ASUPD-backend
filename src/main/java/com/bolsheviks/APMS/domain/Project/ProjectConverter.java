@@ -7,6 +7,7 @@ import com.bolsheviks.APMS.domain.User.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,10 +19,11 @@ public class ProjectConverter {
 
     public ProjectDto convertProjectToDto(Project project) {
         ProjectDto projectDto = new ProjectDto();
+        projectDto.name = project.getName();
         projectDto.userCaptain = project.getUserCaptain().getId();
         projectDto.projectManager = project.getUserProjectManager().getId();
-        projectDto.usersMembersUuidList = project.getUsersMembersList().stream().map(BaseEntity::getId).toList();
-        projectDto.usersConsultantsUuidList = project.getUsersConsultantsList().stream().map(BaseEntity::getId).toList();
+        projectDto.usersMembersUuidList = project.getUsersMembersList().stream().sorted(Comparator.comparing(User::getLastName)).map(BaseEntity::getId).toList();
+        projectDto.usersConsultantsUuidList = project.getUsersConsultantsList().stream().sorted(Comparator.comparing(User::getLastName)).map(BaseEntity::getId).toList();
         projectDto.projectStatus = project.getProjectStatus();
         projectDto.information = project.getInformation();
         projectDto.stageUuidList = project.getStageList().stream().map(BaseEntity::getId).toList();
@@ -29,6 +31,9 @@ public class ProjectConverter {
     }
 
     public void fillProjectByDto(Project project, ProjectDto projectDto) {
+        if (projectDto.name != null) {
+            project.setName(projectDto.name);
+        }
         if (projectDto.usersMembersUuidList != null) {
             project.setUsersMembersList(getUserListFromUuidList(projectDto.usersMembersUuidList));
         }

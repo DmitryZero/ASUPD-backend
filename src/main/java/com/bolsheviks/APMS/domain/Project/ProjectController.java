@@ -65,7 +65,7 @@ public class ProjectController {
         List<User> usersConsultantsList = project.getUsersConsultantsList();
 
         for (User newConsultant : userRepository.findAllById(projectDto.usersConsultantsUuidList)) {
-            if (newConsultant.getRole() != Role.CURATOR || usersConsultantsList.contains(newConsultant)) {
+            if (newConsultant.getRole() != Role.CURATOR || project.containsUser(newConsultant)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
             usersConsultantsList.add(newConsultant);
@@ -88,7 +88,7 @@ public class ProjectController {
         List<User> usersMembersList = project.getUsersMembersList();
 
         for (User newMember : userRepository.findAllById(projectDto.usersMembersUuidList)) {
-            if (usersMembersList.contains(newMember)) {
+            if (project.containsUser(newMember)) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT);
             }
             usersMembersList.add(newMember);

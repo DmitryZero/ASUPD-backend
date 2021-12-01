@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
@@ -21,8 +22,8 @@ public class ProjectProposal extends BaseEntity {
     private String information;
     @OneToMany
     private List<Stage> stageList;
-    @OneToMany
+    @ManyToMany
     private List<User> projectManagersList;
-    @OneToMany
+    @ManyToMany
     private List<User> consultantList;
 }
