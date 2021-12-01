@@ -69,6 +69,8 @@ public class ProjectController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
             usersConsultantsList.add(newConsultant);
+            newConsultant.getProjectList().add(project);
+            userRepository.save(newConsultant);
         }
         projectRepository.save(project);
     }
@@ -92,6 +94,8 @@ public class ProjectController {
                 throw new ResponseStatusException(HttpStatus.CONFLICT);
             }
             usersMembersList.add(newMember);
+            newMember.getProjectList().add(project);
+            userRepository.save(newMember);
         }
         projectRepository.save(project);
     }
@@ -115,6 +119,8 @@ public class ProjectController {
                 throw new ResponseStatusException(HttpStatus.CONFLICT);
             }
             usersConsultantsList.remove(consultantToDelete);
+            consultantToDelete.getProjectList().remove(project);
+            userRepository.save(consultantToDelete);
         }
 
         projectRepository.save(project);
@@ -139,6 +145,8 @@ public class ProjectController {
                 throw new ResponseStatusException(HttpStatus.CONFLICT);
             }
             usersMembersList.remove(membersToDelete);
+            membersToDelete.getProjectList().remove(project);
+            userRepository.save(membersToDelete);
         }
 
         projectRepository.save(project);
