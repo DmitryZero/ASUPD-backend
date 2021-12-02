@@ -50,6 +50,4 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> find(String arg1, String arg2, String arg3);
 
     int countByRole(Role role);
-
-    List<User> findAllByLastNameStartsWithAndFirstNameStartsWithAndPatronymicStartsWith(String lastName, String name, String patronymic);
 }
