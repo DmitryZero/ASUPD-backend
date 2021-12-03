@@ -46,7 +46,7 @@ public class MockService {
         firstProjectProposal.setName("АСУ проектной деятельностью");
         firstProjectProposal.setInformation("Разработка АСУПД для ИжГТУ");
         List<User> users = new ArrayList<>();
-        users.add(createUser("Шишлина", "Наталья", "Васильевна", Role.CURATOR));
+        users.add(createUser("Шишлина", "Наталья", "Васильевна", Role.CURATOR, "curator", "curator"));
         firstProjectProposal.setProjectManagersList(users);
         ArrayList<User> consultants = new ArrayList<>();
         consultants.add(createUser("Пигалев", "Сергей", "Александрович", Role.CURATOR));
@@ -71,6 +71,19 @@ public class MockService {
 
     private User createUser(String firstName, String lastName, String patronymic, Role role) {
         User user = new User();
+        user.setRole(role);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setPatronymic(patronymic);
+
+        userRepository.save(user);
+        return user;
+    }
+
+    private User createUser(String firstName, String lastName, String patronymic, Role role, String login, String password) {
+        User user = new User();
+        user.setLogin(login);
+        user.setPassword(password);
         user.setRole(role);
         user.setFirstName(firstName);
         user.setLastName(lastName);
