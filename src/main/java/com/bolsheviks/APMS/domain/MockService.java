@@ -27,6 +27,10 @@ public class MockService {
     private void createMocks() {
         createProjectProposalMocks();
         createAdmin();
+        createUser("Сергей", "Мишутин", "Сергеевич", Role.USER);
+        createUser("Сергей", "Макаров", "Сергеевич", Role.USER);
+        createUser("Илья", "Лекомцев", "Анатольевич", Role.USER, "user", "user");
+        createUser("Дмитрий", "Никитин", "Алексеевич", Role.USER, "d@gmail.com", "321");
     }
 
     private void createAdmin() {
