@@ -29,14 +29,14 @@ public class MockService {
         createAdmin();
         createUser("Сергей", "Мишутин", "Сергеевич", Role.USER);
         createUser("Сергей", "Макаров", "Сергеевич", Role.USER);
-        createUser("Илья", "Лекомцев", "Анатольевич", Role.USER, "user", "user");
+        createUser("Илья", "Лекомцев", "Анатольевич", Role.USER, "captain", "captain");
         createUser("Дмитрий", "Никитин", "Алексеевич", Role.USER, "d@gmail.com", "321");
     }
 
     private void createAdmin() {
         User admin = new User();
         admin.setLogin("admin");
-        admin.setPassword("oralcumshot");
+        admin.setPassword("admin");
         admin.setRole(Role.BUSINESS_ADMINISTRATOR);
         userRepository.save(admin);
     }
@@ -46,10 +46,10 @@ public class MockService {
         firstProjectProposal.setName("АСУ проектной деятельностью");
         firstProjectProposal.setInformation("Разработка АСУПД для ИжГТУ");
         List<User> users = new ArrayList<>();
-        users.add(createUser("Шишлина", "Наталья", "Васильевна", Role.CURATOR, "curator", "curator"));
+        users.add(createUser("Шишлина", "Наталья", "Васильевна", Role.CURATOR, "manager", "manager"));
         firstProjectProposal.setProjectManagersList(users);
         ArrayList<User> consultants = new ArrayList<>();
-        consultants.add(createUser("Пигалев", "Сергей", "Александрович", Role.CURATOR));
+        consultants.add(createUser("Пигалев", "Сергей", "Александрович", Role.CURATOR, "curator", "curator"));
         consultants.add(createUser("Сенилов", "Михал", "Андреич", Role.CURATOR));
         firstProjectProposal.setConsultantList(consultants);
         firstProjectProposal.setStageNames("Разработка и анализ требований");
@@ -65,7 +65,7 @@ public class MockService {
         secondConsultants.add(createUser("Линус", "Торвальдс", "Иванович", Role.CURATOR));
         secondConsultants.add(createUser("Хайсэ", "Сасаки", "Андреич", Role.CURATOR));
         secondProjectProposal.setConsultantList(secondConsultants);
-        secondProjectProposal.setStageNames("Разработка и анализ требований/Презентация прототипа/Заработка деняк");
+        secondProjectProposal.setStageNames("Разработка и анализ требований/Презентация прототипа/Поддержка продукта");
         projectProposalRepository.save(secondProjectProposal);
     }
 
